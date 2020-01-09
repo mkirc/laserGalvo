@@ -1,3 +1,4 @@
 gCodeSender/
 marlin/
 *.o
+*.png
