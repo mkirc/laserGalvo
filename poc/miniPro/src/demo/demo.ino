@@ -3,20 +3,21 @@
 #include "MCP48x2.h"
 
 #define MAX_VALUE 4095
-#define PIN_INC 10
-#define PIN_DEC 11
-#define CSPIN 12
+#define PIN_INC 5
+#define PIN_DEC 4
+#define CSPIN 10
 
+// setup byte for channels, mode and gain 2 * 2.048V
 byte channelA = CHANNEL_A | GAIN_2 | MODE_ACTIVE;
 byte channelB = CHANNEL_B | GAIN_2 | MODE_ACTIVE;
 
-// read step pwm signals from esp32 using external interrrupts
+// used for reading step pwm signals 
 int xStepPin = 2;
 int yStepPin = 3;
 volatile int xPwmVal = 0;
 volatile int yPwmVal = 0;
 
-// reads dir signals from esp32
+// used for reading dir signals 
 #define xDirPin A2
 #define yDirPin A3
 int xDirVal = 0;
@@ -40,6 +41,7 @@ int boundsCheck(int current) {
 }
 
 
+// initialises the DAC (hopefully)
 MCP48x2 dac(MCP4822, CSPIN);
 
 void setup() {
@@ -56,11 +58,10 @@ void setup() {
   dac.send(channelB, 0); 
   
   // setup step detection pins
-  pinMode(xStepPin, INPUT);
-  pinMode(yStepPin, INPUT);
+  pinMode(xStepPin, INPUT_PULLUP);
+  pinMode(yStepPin, INPUT_PULLUP);
 
   // setup dir detection pins
-
   pinMode(xDirPin, INPUT);
   pinMode(yDirPin, INPUT);
 }
@@ -69,12 +70,13 @@ void setup() {
 
 void loop() {
 
+  // read step/dir signals
   xPwmVal = digitalRead(xStepPin);
   yPwmVal = digitalRead(yStepPin);
   xDirVal = digitalRead(xDirPin);
   yDirVal = digitalRead(yDirPin);
 
-  
+  // does boundsCheck(), then writes x,y vals via spi
   if (xPwmVal != 0) {
     String xVal = String(xPwmVal);
     if (xDirVal != 0) {
@@ -85,6 +87,7 @@ void loop() {
       }
       else {
         // Serial.println("xOOB");
+        dac.send(channelA, curX);
       }
     }
     else {
@@ -95,6 +98,7 @@ void loop() {
       }
       else {
         // Serial.println("xOOB");
+        dac.send(channelA, curX);
       }
     }
   }
@@ -109,6 +113,7 @@ void loop() {
       }
       else {
         // Serial.println("yOOB!");
+        dac.send(channelB, curY);
       }
     }
     else {
@@ -119,6 +124,7 @@ void loop() {
       }
       else {
         // Serial.println("yOOB");
+        dac.send(channelB, curY);
       }
     }
   }
