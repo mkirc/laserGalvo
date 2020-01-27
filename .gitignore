@@ -2,3 +2,5 @@ gCodeSender/
 marlin/
 *.o
 *.png
+*.tar
+.pio/
