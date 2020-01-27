@@ -12,11 +12,11 @@ Materialien  in eine XY- Ebene projezieren zu können, wird folgender prakmatisc
 
 Es werden folgende Designentscheidungen getroffen:
 
-###Gcode als Transportmedium der Vektorgrafik
+### Gcode als Transportmedium der Vektorgrafik
 - **Vorteile** : Parser vorhanden, Kurven
 - **Nachteile** : Viele Dialekte, Fehleranfälligkeit bei der Erzeugung
 
-###Sequenzielles senden der Gcode Befehle über serielle Schnittstelle
+### Sequenzielles senden der Gcode Befehle über serielle Schnittstelle
 - **Vorteile** : Gleicht geringen Speicher der verwendeten Microcontroller aus, verkleinert die Matrialliste
 - **Nachteile** : Fehler bei der Übertragung möglich
 
