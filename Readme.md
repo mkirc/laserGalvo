@@ -26,6 +26,7 @@ schauen muss, welche Version mit Grbl v1.1 am besten funktioniert.
 
 ###Skizze
 
+![alt text][full]
 [full]: https://github.com/mkirc/laserGalvo/poc/full.png "Almost all you need" 
 
 ## grbl build for esp32
@@ -45,10 +46,10 @@ angepasst werden. Hier muss in [config.h](./gbl/Grbl_Esp32/config.h) die cpu (li
 Die Einstellung holt die Firmware aus dem testmodus und mappt den für uns relevanten Output der Step/Dir 
 Signale zu den folgenden PINs:
 
-|xStep| GPIO 12|
-|xDir|  GPIO 14|
-|yStep| GPIO 26|
-|yDir|  GPIO 15|
+**xStep: GPIO 12**
+**xDir: GPIO 14**
+**yStep: GPIO 26**
+**yDir: GPIO 15**
 
 Zum flashen wird das [platformio](https://platformio.org/) tool verwendet.
 Eine für die verwendeten Libraries und das Esp32-devkit angepasste platformio.ini liegt [hier](.gbl/platformio.ini).
@@ -73,11 +74,13 @@ Es werden über das [Config Menü der Firmware](https://github.com/gnea/grbl/wik
 
 Step/Dir werden als Pulse-Width-modulierte Signale der Form:
 
+![alt text][step_dir]
 [step_dir]: https://github.com/mkirc/laserGalvo/poc/step_dir.png "ugly & phony"
 
 Um die Ausgabe in für die Galvos verwertbare Signale umzurechnen, wird better & still phonyein Steppermotor in einem
 [Arduino Pro Mini](https://cdn.sparkfun.com/assets/home_page_posts/1/9/4/7/ProMini16MHzv1.png) emuliert. Hier werden die Werte vom Esp32 ausgelesen und in X/Y Koordinaten umgerechnet:
 
+![alt text][x_y]
 [x_y]: https://github.com/mkirc/laserGalvo/poc/x_y.png "better & still phony"
 
 
