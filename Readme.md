@@ -20,18 +20,18 @@ Port.
 Wir verwenden für die Hardware des Gcode interpreters ein [Esp32-devkit-v1](https://file.vishnumaiea.in/download/esp32/ESP32-Devkit-Pinout-Rev-12-4000p.png). Die GRBL firmware muss vor dem flashen noch
 angepasst werden. Hier muss in (./gbl/Grbl_Esp32/config.h) die CPU_MAP_ESP32 ausgewählt werden. 
 
-'''
+```
 // #define CPU_MAP_TEST_DRIVE
 #define CPU_MAP_ESP32 
-'''
+```
 
 Die Einstellung holt die Firmware aus dem testmodus und mappt den für uns relevanten Output der Step/Dir 
 Signale zu den folgenden PINs:
 
-*xStep: GPIO 12*
-*xDir:  GPIO 14*
-*yStep: GPIO 26*
-*yDir:  GPIO 15*
+|xStep| GPIO 12|
+|xDir|  GPIO 14|
+|yStep| GPIO 26|
+|yDir|  GPIO 15|
 
 Zum flashen wird das [platformio](https://platformio.org/) tool verwendet.
 Eine für die verwendeten Libraries und das Esp32-devkit angepasste platformio.ini liegt [hier](.gbl/platformio.ini).
@@ -40,9 +40,9 @@ Für eine Installation per ArduinoIDE ist der [Guide](https://github.com/bdring/
 (ARDUINO IDE HINWEIS: SPIFF MIN Partitionierung auswählen!)
 
 Nach dem flashen kann man mit dem Befehl
-'''
+```
 platformio device monitor -p [PORT] -b 115200
-'''
+```
 überprüen ob alles funktioniert hat. Der serielle Monitor sollte eine Meldung der Form 
 *Grbl vX.Xx ['$' for help]* und weitere Config-werte zeigen. Bei Problemen auch hier der Verweis ans Grbl-Wiki.
 
@@ -50,13 +50,17 @@ platformio device monitor -p [PORT] -b 115200
 
 Es werden über das [Config Menü der Firmware](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Configuration) folgende Einstellungen vorgenommen:
 
-- Zur Vereinfachung der Berechnung von X/Y werden die Steps/mm *($101/102)* auf *1* gesetzt
-- Damit die Step Signale sauber gemessen werden können, wird die Pulsbreite *($0)* auf *50* ms gesetzt 
+- Zur Vereinfachung der Berechnung von X/Y werden die Steps/mm **($101/102)** auf **1** gesetzt
+- Damit die Step Signale sauber gemessen werden können, wird die Pulsbreite **($0)** auf **50** ms gesetzt 
 - Es können zusätzlich Rate/Beschleunigung angepasst werden
 
 Step/Dir werden als Pulse-Width-modulierte Signale der Form:
 
-step/dir img
+Step img
+
+Es wird aber ein Signal der folgenden Form benötigt:
+
+XY img
 
 Um die Ausgabe in für die Galvos verwertbare Signale umzurechnen, wird ein Steppermotor in einem
 [Arduino Pro Mini](https://cdn.sparkfun.com/assets/home_page_posts/1/9/4/7/ProMini16MHzv1.png) emuliert. Hier werden die Werte vom Esp32 ausgelesen und in X/Y Koordinaten umgerechnet. 
