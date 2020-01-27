@@ -24,7 +24,7 @@ Es werden folgende Designentscheidungen getroffen:
 Für das Senden der Gcode verwenden wir den [universalGcodeSender](https://winder.github.io/ugs_website/), wobei man je nach Betriebssystem 
 schauen muss, welche Version mit Grbl v1.1 am besten funktioniert.
 
-###Skizze
+###  Skizze
 
 ![alt text](./poc/full.png "Almost all you need") 
 
