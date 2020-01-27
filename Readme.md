@@ -1,6 +1,6 @@
 # laserGalvo - technical writeup
 
-# overview
+## overview
 
 Um beliebige Vektorgrafiken mit einem günstigen [Galvo-Aufbau](https://en.wikipedia.org/wiki/Mirror_galvanometer) zur Belichtung von fotosensitiven
 Materialien  in eine XY- Ebene projezieren zu können, wird folgender prakmatischer Aufbau genutzt:
@@ -10,6 +10,23 @@ Materialien  in eine XY- Ebene projezieren zu können, wird folgender prakmatisc
 - Step/Dir Signale werden in Y/X - Werte zurückgerechnet
 - X/Y - Werte werden als Spannungen an den Galvo - Treiber übergeben
 
+Es werden folgende Designentscheidungen getroffen:
+
+###Gcode als Transportmedium der Vektorgrafik
+- **Vorteile** : Parser vorhanden, Kurven
+- **Nachteile** : Viele Dialekte, Fehleranfälligkeit bei der Erzeugung
+
+###Sequenzielles senden der Gcode Befehle über serielle Schnittstelle
+- **Vorteile** : Gleicht geringen Speicher der verwendeten Microcontroller aus, verkleinert die Matrialliste
+- **Nachteile** : Fehler bei der Übertragung möglich
+
+
+Für das Senden der Gcode verwenden wir den [universalGcodeSender](https://winder.github.io/ugs_website/), wobei man je nach Betriebssystem 
+schauen muss, welche Version mit Grbl v1.1 am besten funktioniert.
+
+###Skizze
+
+[full]: https://github.com/mkirc/laserGalvo/assets/full.png "Almost all you need" 
 
 ## grbl build for esp32
 
@@ -18,7 +35,7 @@ hierfür ein großes Dankeschön an die Menschen von [Grbl](https://github.com/g
 Port.
 
 Wir verwenden für die Hardware des Gcode interpreters ein [Esp32-devkit-v1](https://file.vishnumaiea.in/download/esp32/ESP32-Devkit-Pinout-Rev-12-4000p.png). Die GRBL firmware muss vor dem flashen noch
-angepasst werden. Hier muss in (./gbl/Grbl_Esp32/config.h) die CPU_MAP_ESP32 ausgewählt werden. 
+angepasst werden. Hier muss in [config.h](./gbl/Grbl_Esp32/config.h) die cpu (lies: pin) map CPU_MAP_ESP32 ausgewählt werden. 
 
 ```
 // #define CPU_MAP_TEST_DRIVE
@@ -44,7 +61,7 @@ Nach dem flashen kann man mit dem Befehl
 platformio device monitor -p [PORT] -b 115200
 ```
 überprüen ob alles funktioniert hat. Der serielle Monitor sollte eine Meldung der Form 
-*Grbl vX.Xx ['$' for help]* und weitere Config-werte zeigen. Bei Problemen auch hier der Verweis ans Grbl-Wiki.
+**Grbl vX.Xx ['$' for help]** und weitere Config-werte zeigen. Bei Problemen auch hier der Verweis ans Grbl-Wiki.
 
 ### Config
 
@@ -56,14 +73,12 @@ Es werden über das [Config Menü der Firmware](https://github.com/gnea/grbl/wik
 
 Step/Dir werden als Pulse-Width-modulierte Signale der Form:
 
-Step img
+[step_dir]: https://github.com/mkirc/laserGalvo/assets/step_dir.png "ugly & phony"
 
-Es wird aber ein Signal der folgenden Form benötigt:
+Um die Ausgabe in für die Galvos verwertbare Signale umzurechnen, wird better & still phonyein Steppermotor in einem
+[Arduino Pro Mini](https://cdn.sparkfun.com/assets/home_page_posts/1/9/4/7/ProMini16MHzv1.png) emuliert. Hier werden die Werte vom Esp32 ausgelesen und in X/Y Koordinaten umgerechnet:
 
-XY img
-
-Um die Ausgabe in für die Galvos verwertbare Signale umzurechnen, wird ein Steppermotor in einem
-[Arduino Pro Mini](https://cdn.sparkfun.com/assets/home_page_posts/1/9/4/7/ProMini16MHzv1.png) emuliert. Hier werden die Werte vom Esp32 ausgelesen und in X/Y Koordinaten umgerechnet. 
+[x_y]: https://github.com/mkirc/laserGalvo/x_y.png "better & still phony"
 
 
 ## map X/Y - step values to 12bit range of dac
@@ -79,6 +94,15 @@ Hierfür wird ein herkömmlicher FT232 FTDi USB/UART Programmer verwendet. Die b
 |vdd    |vdd        |
 
 Zum Upload kann wiederum die ArduinoIDE oder das platformio tool verwendet werden.
+Weiterhin müssen Esp32 und Arduino Pro Mini verbunden werden:
+
+|Esp32  |Pro mini   |
+|-------|-----------|
+|12     |2          |
+|14     |A2         |
+|26     |3          |
+|15     |A3         |
+
 Die berechneten Werte werden über SPI an einen MCP 4822 DAC gesendet, der die Integerwerte auf
 eine Spannung zwischen 0 und 4.096V mappt. Für das Interface wird die [MCP48x2](https://github.com/SweBarre/MCP48x2) Library von 
 SweBarre genutzt, dem ebenso unser Dank gilt!
