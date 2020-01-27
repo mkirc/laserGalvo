@@ -26,7 +26,7 @@ schauen muss, welche Version mit Grbl v1.1 am besten funktioniert.
 
 ###Skizze
 
-[full]: https://github.com/mkirc/laserGalvo/assets/full.png "Almost all you need" 
+[full]: https://github.com/mkirc/laserGalvo/poc/full.png "Almost all you need" 
 
 ## grbl build for esp32
 
@@ -73,12 +73,12 @@ Es werden über das [Config Menü der Firmware](https://github.com/gnea/grbl/wik
 
 Step/Dir werden als Pulse-Width-modulierte Signale der Form:
 
-[step_dir]: https://github.com/mkirc/laserGalvo/assets/step_dir.png "ugly & phony"
+[step_dir]: https://github.com/mkirc/laserGalvo/poc/step_dir.png "ugly & phony"
 
 Um die Ausgabe in für die Galvos verwertbare Signale umzurechnen, wird better & still phonyein Steppermotor in einem
 [Arduino Pro Mini](https://cdn.sparkfun.com/assets/home_page_posts/1/9/4/7/ProMini16MHzv1.png) emuliert. Hier werden die Werte vom Esp32 ausgelesen und in X/Y Koordinaten umgerechnet:
 
-[x_y]: https://github.com/mkirc/laserGalvo/x_y.png "better & still phony"
+[x_y]: https://github.com/mkirc/laserGalvo/poc/x_y.png "better & still phony"
 
 
 ## map X/Y - step values to 12bit range of dac
