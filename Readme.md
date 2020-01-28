@@ -5,7 +5,7 @@
 Um beliebige Vektorgrafiken mit einem günstigen [Galvo-Aufbau](https://en.wikipedia.org/wiki/Mirror_galvanometer) zur Belichtung von fotosensitiven
 Materialien  in eine XY- Ebene projezieren zu können, nutzen wir folgenden Ansatz:
 
-- Aus Vektorgrafik wird [Gcode](https://wikipedia.org/g-code) erzeugt
+- Aus Vektorgrafik wird [Gcode](https://en.wikipedia.org/wiki/G-code) erzeugt
 - Interpreter wandelt Gcode - Befehle in Bewegungs/Richtungs - Signale um
 - Step/Dir Signale werden in Y/X - Werte zurückgerechnet
 - X/Y - Werte werden als Spannungen an den Galvotreiber übergeben
@@ -29,12 +29,15 @@ Für das Senden der Gcode verwenden wir den [universalGcodeSender](https://winde
 
 ## grbl build for esp32
 
-Die Esp firmware kommt vom [Grbl_Esp32](https://github.com/bdring/Grbl_Esp32) Projekt,
+Die Firmware für das Esp32 kommt vom [Grbl_Esp32](https://github.com/bdring/Grbl_Esp32) Projekt,
 hierfür ein großes Dankeschön an die Menschen von [Grbl](https://github.com/gnea/grbl) und an bdring für den
 Port.
+Ich habe eine Kopie der Firmware in diesem Repository, zu dem Zweck, unseren Status Quo zu repräsentieren,
+**Ich erhebe keinen Anspruch auf Autorenschaft, oder sonstige Besitzansprüche an Grbl, noch garantiere ich für
+irgendeine Funktionalität.**
 
-Wir verwenden für die Hardware des Gcode interpreters ein [Esp32-devkit-v1](https://file.vishnumaiea.in/download/esp32/ESP32-Devkit-Pinout-Rev-12-4000p.png). Die GRBL firmware muss vor dem flashen noch
-angepasst werden. Hier muss in [config.h](gbl/Grbl_Esp32/config.h) die cpu (lies: pin) map CPU_MAP_ESP32 ausgewählt werden. 
+Wir verwenden für die Hardware des Gcode interpreters ein [Esp32-devkit-v1](https://file.vishnumaiea.in/download/esp32/ESP32-Devkit-Pinout-Rev-12-4000p.png). Die GRBL Firmware muss vor dem flashen noch
+angepasst werden. Hier muss in [config.h](gbl/Grbl_Esp32/Grbl_Esp32/config.h) die cpu (lies: pin) map CPU_MAP_ESP32 ausgewählt werden. 
 
 ```
 // #define CPU_MAP_TEST_DRIVE
@@ -50,7 +53,7 @@ Signale zu den folgenden PINs:
 - **yDir: GPIO 15**
 
 Zum flashen wird das [platformio](https://platformio.org/) tool verwendet.
-Eine für die verwendeten Libraries und das Esp32-devkit angepasste platformio.ini liegt [hier](gbl/platformio.ini).
+Eine für die verwendeten Libraries und das Esp32-devkit angepasste platformio.ini liegt [hier](gbl/Grbl_Esp32/Grbl_Esp32/platformio.ini).
 
 Für eine Installation per ArduinoIDE ist der [Guide](https://github.com/bdring/Grbl_Esp32/wiki/Compiling-the-firmware) aus dem Grbl_Esp32 wiki sehr hilfreich.
 (HINWEIS: SPIFF MIN Partitionierung auswählen!)
@@ -82,7 +85,7 @@ In diesem werden die Werte vom Esp32 ausgelesen und in X/Y Koordinaten umgerechn
 
 ## map X/Y - step values to 12bit range of dac
 
-Zunächst muss der Sketch [demo.ino](./poc/miniPro/src/demo.ino) auf das Arduino Board geflasht werden.
+Zunächst muss der Sketch [demo.ino](./poc/miniPro/src/demo/demo.ino) auf das Arduino Board geflasht werden.
 Hierfür wird ein herkömmlicher FT232 FTDi USB/UART Programmer verwendet. Die beiden Boards werden folgendermaßen verbunden:
 
 |ft232  |Pro mini   |
